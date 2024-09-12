@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakthi’s Spice Kitchen - Order Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Attractive background gradient */
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .quantity-control button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .quantity-control button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .quantity-control input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 5px;
+            padding: 5px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .menu-section {
+            margin-bottom: 30px;
+        }
+        .menu-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .menu-section label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .total-section {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        const prices = {
+            starters: {
+                'paneer_tikka': 180,
+                'gobi_65': 165,
+                'veg_pakoda': 160,
+                'mirchi_bajji': 155,
+                'chilli_gobi': 170,
+                'baby_corn_manchurian': 185,
+                'chilli_paneer': 190
+            },
+            main_course: {
+                'veg_fried_rice': 340,
+                'schezwan_fried_rice': 350,
+                'veg_biriyani': 370,
+                'paneer_biriyani': 390,
+                'mushroom_biriyani': 385,
+                'veg_noodles': 360,
+                'schezwan_noodles': 370,
+                'veg_pulav': 340,
+                'kashmiri_pulav': 370,
+                'sambar_rice': 280,
+                'curd_rice': 210
+            },
+            chats: {
+                'samosa': 120,
+                'pani_poori': 170,
+                'masala_puri': 160,
+                'pav_baaji': 155,
+                'bhel_puri': 160,
+                'vada_pav': 165,
+                'raj_kachori': 190
+            }
+        };
+
+        function calculateTotal() {
+            let total = 0;
+            const sections = ['starters', 'main_course', 'chats'];
+
+            sections.forEach(section => {
+                const items = document.querySelectorAll(`input[name="${section}"]`);
+                items.forEach(item => {
+                    if (item.checked) {
+                        const quantity = parseInt(item.nextElementSibling.querySelector('input').value) || 0;
+                        total += prices[section][item.value] * quantity;
+                    }
+                });
+            });
+
+            document.getElementById('total').textContent = 'Total: ₹' + total;
+        }
+
+        function updateQuantity(input, change) {
+            let currentValue = parseInt(input.value) || 0;
+            currentValue += change;
+            if (currentValue < 0) currentValue = 0;
+            input.value = currentValue;
+            calculateTotal();
+        }
+
+        function showConfirmation() {
+            alert('Ordered Successfully');
+            return false; // Prevents actual form submission for demo purposes
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Online - Sakthi’s Spice Kitchen</h1>
+        <form onsubmit="return showConfirmation()">
+            <!-- Menu Section -->
+            <div class="menu-section">
+                <h2>Starters</h2>
+                <label>
+                    <input type="checkbox" name="starters" value="paneer_tikka" onchange="calculateTotal()">
+                    Paneer Tikka - ₹180
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="gobi_65" onchange="calculateTotal()">
+                    Gobi 65 - ₹165
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="veg_pakoda" onchange="calculateTotal()">
+                    Veg Pakoda - ₹160
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="mirchi_bajji" onchange="calculateTotal()">
+                    Mirchi Bajji - ₹155
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="chilli_gobi" onchange="calculateTotal()">
+                    Chilli Gobi - ₹170
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="baby_corn_manchurian" onchange="calculateTotal()">
+                    Baby Corn Manchurian - ₹185
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="starters" value="chilli_paneer" onchange="calculateTotal()">
+                    Chilli Paneer - ₹190
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+            </div>
+
+            <div class="menu-section">
+                <h2>Main Course</h2>
+                <label>
+                    <input type="checkbox" name="main_course" value="veg_fried_rice" onchange="calculateTotal()">
+                    Veg Fried Rice - ₹340
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="schezwan_fried_rice" onchange="calculateTotal()">
+                    Schezwan Fried Rice - ₹350
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="veg_biriyani" onchange="calculateTotal()">
+                    Veg Biriyani - ₹370
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="paneer_biriyani" onchange="calculateTotal()">
+                    Paneer Biriyani - ₹390
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="mushroom_biriyani" onchange="calculateTotal()">
+                    Mushroom Biriyani - ₹385
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="veg_noodles" onchange="calculateTotal()">
+                    Veg Noodles - ₹360
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="schezwan_noodles" onchange="calculateTotal()">
+                    Schezwan Noodles - ₹370
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="veg_pulav" onchange="calculateTotal()">
+                    Veg Pulav - ₹340
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="kashmiri_pulav" onchange="calculateTotal()">
+                    Kashmiri Pulav - ₹370
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="sambar_rice" onchange="calculateTotal()">
+                    Sambar Rice - ₹280
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="main_course" value="curd_rice" onchange="calculateTotal()">
+                    Curd Rice - ₹210
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+            </div>
+
+            <div class="menu-section">
+                <h2>Chats</h2>
+                <label>
+                    <input type="checkbox" name="chats" value="samosa" onchange="calculateTotal()">
+                    Samosa - ₹120
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="pani_poori" onchange="calculateTotal()">
+                    Pani Poori - ₹170
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="masala_puri" onchange="calculateTotal()">
+                    Masala Puri - ₹160
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="pav_baaji" onchange="calculateTotal()">
+                    Pav Baaji - ₹155
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="bhel_puri" onchange="calculateTotal()">
+                    Bhel Puri - ₹160
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="vada_pav" onchange="calculateTotal()">
+                    Vada Pav - ₹165
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="chats" value="raj_kachori" onchange="calculateTotal()">
+                    Raj Kachori - ₹190
+                    <div class="quantity-control">
+                        <button type="button" onclick="updateQuantity(this.nextElementSibling, -1)">-</button>
+                        <input type="number" min="0" value="0" onchange="calculateTotal()">
+                        <button type="button" onclick="updateQuantity(this.previousElementSibling, 1)">+</button>
+                    </div>
+                </label>
+            </div>
+
+            <div class="total-section" id="total">Total: ₹0</div>
+
+            <div class="form-group">
+                <button type="submit">Place Order</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
